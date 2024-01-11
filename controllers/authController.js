@@ -1,5 +1,4 @@
 const User = require('../models/userModel');
-const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 const loginPage = (req, res) =>{
@@ -22,9 +21,9 @@ const login = (req, res, next) => {
       }
 
       if (req.user && req.user.role === 'admin') {
-        return res.render('admin/dashboard');
+        return res.redirect('/admin/dashboard');
       }else if(req.user && req.user.role === 'user'){
-        return res.render('user/dashboard');
+        return res.redirect('/user/dashboard');
       }else{
         return res.render('somethingWrong');
       }

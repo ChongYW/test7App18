@@ -6,8 +6,6 @@ var logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
-const LocalStrategy = require('passport-local').Strategy;
-const expressFlash = require('express-flash');
 const User = require('./models/userModel');
 
 // var indexRouter = require('./routes/index');
