@@ -7,9 +7,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const User = require('./models/userModel');
+const authenticationMiddleware = require('./middleware/authenticationMiddleware');
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
 const authRouter = require('./routes/authRouter');
 const adminRouter = require('./routes/admin/adminRouter');
 const userRouter = require('./routes/user/userRouter');
@@ -28,20 +27,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// passport.use(new LocalStrategy(User.authenticate()));
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+// Cant call the `ensureNotAuthenticated` globaly cause will hit other middleware like `ensureAuthenticated`.
 app.use('/', authRouter);
-app.use('/admin', adminRouter);
-app.use('/user', userRouter);
+
+// For avoid overlap anything bug some middleware will call one by one, instead of `app.use(authenticationMiddleware.ensureAuthenticated);`.
+app.use('/admin', authenticationMiddleware.ensureAuthenticated, adminRouter);
+app.use('/user', authenticationMiddleware.ensureAuthenticated, userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -60,6 +59,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-// Stop at `login` from `authController.js`.
-// C:\Users\User\Desktop\Work+\Exapancific Sdn Bhd\Project+\Project 2\test7\test7App18\views\admin\dashboard.ejs
