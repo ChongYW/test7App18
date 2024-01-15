@@ -8,6 +8,7 @@ const passport = require('passport');
 const session = require('express-session');
 const User = require('./models/userModel');
 const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+const cacheControlMiddleware = require('./middleware/cacheControlMiddleware');
 const flash = require('express-flash');
 
 const authRouter = require('./routes/authRouter');
@@ -30,6 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Use flash messages
 app.use(flash());
+
+// Use the cache control middleware
+app.use(cacheControlMiddleware);
 
 app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
