@@ -8,6 +8,7 @@ const passport = require('passport');
 const session = require('express-session');
 const User = require('./models/userModel');
 const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+const flash = require('express-flash');
 
 const authRouter = require('./routes/authRouter');
 const adminRouter = require('./routes/admin/adminRouter');
@@ -27,6 +28,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Use flash messages
+app.use(flash());
+
 app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -39,8 +43,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use('/', authRouter);
 
 // For avoid overlap anything bug some middleware will call one by one, instead of `app.use(authenticationMiddleware.ensureAuthenticated);`.
-app.use('/admin', authenticationMiddleware.ensureAuthenticated, adminRouter);
-app.use('/user', authenticationMiddleware.ensureAuthenticated, userRouter);
+app.use('/admin', authenticationMiddleware.ensureAuthenticated, authenticationMiddleware.isAdmin, adminRouter);
+app.use('/user', authenticationMiddleware.ensureAuthenticated, authenticationMiddleware.isUser, userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -59,3 +63,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+// Stop at after user logout and press back btn it will show the content b4 logout...

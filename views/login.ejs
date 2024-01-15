@@ -6,6 +6,14 @@
   <title>User Login</title>
 </head>
 <body>
+  <% if (messages && messages.warning && messages.warning.length > 0) { %>
+    <div style="color: rgba(255, 153, 0, 0.805);">
+        <% messages.warning.forEach(warning => { %>
+            <p><%= warning %></p>
+        <% }); %>
+    </div>
+<% } %>
+
   <h1>User Login</h1>
   <form method="POST" action="/login">
     <label for="email">Email:</label>
@@ -14,6 +22,15 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
 
+    <% if (messages && messages.error && messages.error.length > 0) { %>
+      <div style="color: red;">
+          <% messages.error.forEach(error => { %>
+              <p><%= error %></p>
+          <% }); %>
+      </div>
+  <% } %>
+
+  <br><br>
     <button><a href="/signup">Signup</a></button>
     <button type="submit">Login</button>
   </form>

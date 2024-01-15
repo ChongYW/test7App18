@@ -12,7 +12,8 @@ const login = (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(401).json({ message: 'Authentication failed', info });
+      req.flash('error', 'Email or Password is wrong!');
+      return res.status(401).redirect('/login');
     }
 
     req.logIn(user, (err) => {

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../../controllers/user/userController.js');
-const authenticationMiddleware = require('../../middleware/authenticationMiddleware');
 
-
-router.get('/dashboard', authenticationMiddleware.ensureAuthenticated, userController.dashboardPage);
+router.get('/dashboard', userController.dashboardPage);
+router.get('/profile', userController.profilePage);
+router.post('/logout', userController.logout);
 
 module.exports = router;

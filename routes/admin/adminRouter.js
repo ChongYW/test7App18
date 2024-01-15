@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../../controllers/admin/adminController');
-const authenticationMiddleware = require('../../middleware/authenticationMiddleware');
 
-router.get('/dashboard', authenticationMiddleware.ensureAuthenticated, adminController.dashboardPage);
+router.get('/dashboard', adminController.dashboardPage);
+router.get('/profile', adminController.profilePage);
+router.post('/logout', adminController.logout);
 
 module.exports = router;
