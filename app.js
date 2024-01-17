@@ -4,12 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+const User = require('./models/userModel');
 const passport = require('passport');
 const session = require('express-session');
-const User = require('./models/userModel');
+const flash = require('express-flash');
 const authenticationMiddleware = require('./middleware/authenticationMiddleware');
 const cacheControlMiddleware = require('./middleware/cacheControlMiddleware');
-const flash = require('express-flash');
+const errorMiddleware = require('./middleware/errorMiddleware');
 
 const authRouter = require('./routes/authRouter');
 const adminRouter = require('./routes/admin/adminRouter');
@@ -50,22 +51,25 @@ app.use('/', authRouter);
 app.use('/admin', authenticationMiddleware.ensureAuthenticated, authenticationMiddleware.isAdmin, adminRouter);
 app.use('/user', authenticationMiddleware.ensureAuthenticated, authenticationMiddleware.isUser, userRouter);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// Error handler
+app.use(errorMiddleware.handleError);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 module.exports = app;
 
-// Stop at after user logout and press back btn it will show the content b4 logout...
+// Stop at dynamic EJS page.
