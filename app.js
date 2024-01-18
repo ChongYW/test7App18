@@ -59,7 +59,7 @@ app.use(function(req, res, next) {
 // Error handler
 app.use(errorMiddleware.handleError);
 
-// // error handler
+// error handler
 // app.use(function(err, req, res, next) {
 //   // set locals, only providing error in development
 //   res.locals.message = err.message;
@@ -73,3 +73,5 @@ app.use(errorMiddleware.handleError);
 module.exports = app;
 
 // Stop at dynamic EJS page.
+// C:\Users\User\Desktop\Work+\Exapancific Sdn Bhd\Project+\Project 2\test7\test7App18\views\admin\partials\head.ejs
+// C:\Users\User\Desktop\Work+\Exapancific Sdn Bhd\Project+\Project 2\test7\test7App18\views\admin\dashboard.ejs
